@@ -4,7 +4,7 @@
 //int next = 250;
 
 typedef unsigned int word;
-word __at 0x2007 __CONFIG = (_WDTE_OFF&_MCLRE_OFF);
+word __at 0x2007 __CONFIG = (_MCLRE_OFF&_WDTE_OFF);
 
  
 //To compile:
@@ -37,7 +37,7 @@ int rand(void);
 void main(void)
 {
 
-    TRISIO = 0b00101000; //Poner todos los pines como salidas
+    TRISIO = 0b00100000; //Poner todos los pines como salidas
 	GPIO = 0x00; //Poner pines en bajo
  
     unsigned int time = 200;
