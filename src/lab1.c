@@ -2,11 +2,11 @@
 #include <stdint.h>
 #include <stdio.h>
 
-
+//Desactivar watchdog timer
 typedef unsigned int word;
 word __at 0x2007 __CONFIG = (_WDTE_OFF);
 
- 
+//headers de funciones
 void delay (unsigned inttiempo);
 uint8_t rotl(const uint8_t x, int k);
 uint8_t next(void);
@@ -19,14 +19,16 @@ void main(void)
 	GPIO = 0x00; //Poner pines en bajo
  
     unsigned int time = 200;
-    unsigned int random_num = 3;
+    unsigned int random_num = 0;
 
     //Loop forever
     while ( 1 )
     {
+        //Detectar si la entrada se pone en alto
 		if (GP5) {
-            
-            
+            // Generar numero random
+            random_num = rand();
+            // Elegir cuáles LEDs encender segun el número 
             switch (random_num)
             {
                 case 1:
@@ -78,7 +80,7 @@ void main(void)
                 }
                 
             }
-            random_num = rand();
+            
 		} else {
             GPIO = 0x00; 
 		}
@@ -96,11 +98,11 @@ void delay(unsigned int tiempo)
 	  for(j=0;j<1275;j++);
 }
 
-
+// Generador de numeros random
 uint8_t rotl(const uint8_t x, int k) {
     return (x << k) | (x >> (8 - k));
 }
-
+//seed
 uint8_t s[2] = { 0, 0xA3 };
 
 uint8_t next(void) {
@@ -114,7 +116,7 @@ uint8_t next(void) {
 
     return result;
 }
-
+// Mantener el numero entre 1 y 6
 int rand(void) {
     int randi = 0;
     while (1) {
