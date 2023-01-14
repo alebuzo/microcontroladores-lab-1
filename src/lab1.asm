@@ -74,9 +74,8 @@ STK00	res 1
 ; compiler-defined variables
 ;--------------------------------------------------------
 UDL_lab1_0	udata
-r0x1018	res	1
 r0x1019	res	1
-r0x101A	res	1
+r0x1018	res	1
 r0x1011	res	1
 r0x1010	res	1
 r0x1012	res	1
@@ -128,12 +127,6 @@ code_lab1	code
 ;***
 ;has an exit
 ;functions called:
-;   _delay
-;   _delay
-;   _delay
-;   _delay
-;   _delay
-;   _delay
 ;   _rand
 ;   _delay
 ;   _delay
@@ -142,11 +135,16 @@ code_lab1	code
 ;   _delay
 ;   _delay
 ;   _rand
-;4 compiler assigned registers:
+;   _delay
+;   _delay
+;   _delay
+;   _delay
+;   _delay
+;   _delay
+;3 compiler assigned registers:
 ;   r0x1018
-;   r0x1019
-;   r0x101A
 ;   STK00
+;   r0x1019
 ;; Starting pCode block
 S_lab1__main	code
 _main:
@@ -158,45 +156,47 @@ _main:
 ;	.line	19; "lab1.c"	GPIO = 0x00; //Poner pines en bajo
 	BANKSEL	_GPIO
 	CLRF	_GPIO
-;	.line	22; "lab1.c"	unsigned int random_num = 3;
-	MOVLW	0x03
-	MOVWF	r0x1018
-	CLRF	r0x1019
 _00116_DS_:
-;	.line	27; "lab1.c"	if (GP5) {
+;	.line	28; "lab1.c"	if (GP5) {
 	BANKSEL	_GPIObits
 	BTFSS	_GPIObits,5
 	GOTO	_00113_DS_
+;	.line	30; "lab1.c"	random_num = rand();
+	PAGESEL	_rand
+	CALL	_rand
+	PAGESEL	$
+	MOVWF	r0x1018
+	MOVF	STK00,W
+	MOVWF	r0x1019
 ;;unsigned compare: left < lit(0x1=1), size=2
-;	.line	30; "lab1.c"	switch (random_num)
+;	.line	32; "lab1.c"	switch (random_num)
 	MOVLW	0x00
-	SUBWF	r0x1019,W
+	SUBWF	r0x1018,W
 	BTFSS	STATUS,2
 	GOTO	_00136_DS_
 	MOVLW	0x01
-	SUBWF	r0x1018,W
+	SUBWF	r0x1019,W
 _00136_DS_:
 	BTFSS	STATUS,0
-	GOTO	_00111_DS_
-;;genSkipc:3307: created from rifx:0x7fff646bda90
+	GOTO	_00116_DS_
+;;genSkipc:3307: created from rifx:0x7ffcd434e220
 ;;swapping arguments (AOP_TYPEs 1/2)
 ;;unsigned compare: left >= lit(0x7=7), size=2
 	MOVLW	0x00
-	SUBWF	r0x1019,W
+	SUBWF	r0x1018,W
 	BTFSS	STATUS,2
 	GOTO	_00137_DS_
 	MOVLW	0x07
-	SUBWF	r0x1018,W
+	SUBWF	r0x1019,W
 _00137_DS_:
 	BTFSC	STATUS,0
-	GOTO	_00111_DS_
-;;genSkipc:3307: created from rifx:0x7fff646bda90
-	DECF	r0x1018,W
-	MOVWF	r0x101A
+	GOTO	_00116_DS_
+;;genSkipc:3307: created from rifx:0x7ffcd434e220
+	DECF	r0x1019,F
 	MOVLW	HIGH(_00138_DS_)
 	MOVWF	PCLATH
 	MOVLW	_00138_DS_
-	ADDWF	r0x101A,W
+	ADDWF	r0x1019,W
 	BTFSC	STATUS,0
 	INCF	PCLATH,F
 	MOVWF	PCL
@@ -208,118 +208,111 @@ _00138_DS_:
 	GOTO	_00109_DS_
 	GOTO	_00110_DS_
 _00105_DS_:
-;	.line	34; "lab1.c"	GP0 = 1;
+;	.line	36; "lab1.c"	GP0 = 1;
 	BANKSEL	_GPIObits
 	BSF	_GPIObits,0
-;	.line	35; "lab1.c"	delay(time);
+;	.line	37; "lab1.c"	delay(time);
 	MOVLW	0xc8
 	MOVWF	STK00
 	MOVLW	0x00
 	PAGESEL	_delay
 	CALL	_delay
 	PAGESEL	$
-;	.line	36; "lab1.c"	GP0 = 0;
+;	.line	38; "lab1.c"	GP0 = 0;
 	BANKSEL	_GPIObits
 	BCF	_GPIObits,0
-;	.line	37; "lab1.c"	break;
-	GOTO	_00111_DS_
+;	.line	39; "lab1.c"	break;
+	GOTO	_00116_DS_
 _00106_DS_:
-;	.line	42; "lab1.c"	GP4 = 1;
+;	.line	44; "lab1.c"	GP4 = 1;
 	BANKSEL	_GPIObits
 	BSF	_GPIObits,4
-;	.line	43; "lab1.c"	delay(time);
+;	.line	45; "lab1.c"	delay(time);
 	MOVLW	0xc8
 	MOVWF	STK00
 	MOVLW	0x00
 	PAGESEL	_delay
 	CALL	_delay
 	PAGESEL	$
-;	.line	44; "lab1.c"	GP4 = 0;
+;	.line	46; "lab1.c"	GP4 = 0;
 	BANKSEL	_GPIObits
 	BCF	_GPIObits,4
-;	.line	45; "lab1.c"	break;
-	GOTO	_00111_DS_
+;	.line	47; "lab1.c"	break;
+	GOTO	_00116_DS_
 _00107_DS_:
-;	.line	50; "lab1.c"	GPIO = 0b00010001;
+;	.line	52; "lab1.c"	GPIO = 0b00010001;
 	MOVLW	0x11
 	BANKSEL	_GPIO
 	MOVWF	_GPIO
-;	.line	51; "lab1.c"	delay(time);
+;	.line	53; "lab1.c"	delay(time);
 	MOVLW	0xc8
 	MOVWF	STK00
 	MOVLW	0x00
 	PAGESEL	_delay
 	CALL	_delay
 	PAGESEL	$
-;	.line	52; "lab1.c"	GPIO = 0b00000000;
+;	.line	54; "lab1.c"	GPIO = 0b00000000;
 	BANKSEL	_GPIO
 	CLRF	_GPIO
-;	.line	53; "lab1.c"	break;
-	GOTO	_00111_DS_
+;	.line	55; "lab1.c"	break;
+	GOTO	_00116_DS_
 _00108_DS_:
-;	.line	58; "lab1.c"	GPIO = 0b00010010;
+;	.line	60; "lab1.c"	GPIO = 0b00010010;
 	MOVLW	0x12
 	BANKSEL	_GPIO
 	MOVWF	_GPIO
-;	.line	59; "lab1.c"	delay(time);
+;	.line	61; "lab1.c"	delay(time);
 	MOVLW	0xc8
 	MOVWF	STK00
 	MOVLW	0x00
 	PAGESEL	_delay
 	CALL	_delay
 	PAGESEL	$
-;	.line	60; "lab1.c"	GPIO = 0b00000000;
+;	.line	62; "lab1.c"	GPIO = 0b00000000;
 	BANKSEL	_GPIO
 	CLRF	_GPIO
-;	.line	61; "lab1.c"	break;
-	GOTO	_00111_DS_
+;	.line	63; "lab1.c"	break;
+	GOTO	_00116_DS_
 _00109_DS_:
-;	.line	66; "lab1.c"	GPIO = 0b00010011;
+;	.line	68; "lab1.c"	GPIO = 0b00010011;
 	MOVLW	0x13
 	BANKSEL	_GPIO
 	MOVWF	_GPIO
-;	.line	67; "lab1.c"	delay(time);
+;	.line	69; "lab1.c"	delay(time);
 	MOVLW	0xc8
 	MOVWF	STK00
 	MOVLW	0x00
 	PAGESEL	_delay
 	CALL	_delay
 	PAGESEL	$
-;	.line	68; "lab1.c"	GPIO = 0b00000000;
+;	.line	70; "lab1.c"	GPIO = 0b00000000;
 	BANKSEL	_GPIO
 	CLRF	_GPIO
-;	.line	69; "lab1.c"	break;
-	GOTO	_00111_DS_
+;	.line	71; "lab1.c"	break;
+	GOTO	_00116_DS_
 _00110_DS_:
-;	.line	74; "lab1.c"	GPIO = 0b00010110;
+;	.line	76; "lab1.c"	GPIO = 0b00010110;
 	MOVLW	0x16
 	BANKSEL	_GPIO
 	MOVWF	_GPIO
-;	.line	75; "lab1.c"	delay(time);
+;	.line	77; "lab1.c"	delay(time);
 	MOVLW	0xc8
 	MOVWF	STK00
 	MOVLW	0x00
 	PAGESEL	_delay
 	CALL	_delay
 	PAGESEL	$
-;	.line	76; "lab1.c"	GPIO = 0b00000000;
+;	.line	78; "lab1.c"	GPIO = 0b00000000;
 	BANKSEL	_GPIO
 	CLRF	_GPIO
-_00111_DS_:
-;	.line	81; "lab1.c"	random_num = rand();
-	PAGESEL	_rand
-	CALL	_rand
-	PAGESEL	$
-	MOVWF	r0x1019
-	MOVF	STK00,W
-	MOVWF	r0x1018
+;	.line	82; "lab1.c"	}
 	GOTO	_00116_DS_
 _00113_DS_:
-;	.line	83; "lab1.c"	GPIO = 0x00; 
+;	.line	85; "lab1.c"	GPIO = 0x00; 
 	BANKSEL	_GPIO
 	CLRF	_GPIO
 	GOTO	_00116_DS_
-;	.line	87; "lab1.c"	}
+;	.line	89; "lab1.c"	}
 	RETURN	
 ; exit point of _main
 
@@ -340,7 +333,7 @@ S_lab1__rand	code
 _rand:
 ; 2 exit points
 _00195_DS_:
-;	.line	121; "lab1.c"	randi = next();
+;	.line	123; "lab1.c"	randi = next();
 	PAGESEL	_next
 	CALL	_next
 	PAGESEL	$
@@ -358,7 +351,7 @@ _00195_DS_:
 _00211_DS_:
 	BTFSC	STATUS,0
 	GOTO	_00195_DS_
-;;genSkipc:3307: created from rifx:0x7fff646bda90
+;;genSkipc:3307: created from rifx:0x7ffcd434e220
 ;;swapping arguments (AOP_TYPEs 1/2)
 ;;signed compare: left >= lit(0x1=1), size=2, mask=ffff
 	MOVF	r0x100F,W
@@ -371,12 +364,12 @@ _00211_DS_:
 _00212_DS_:
 	BTFSS	STATUS,0
 	GOTO	_00195_DS_
-;;genSkipc:3307: created from rifx:0x7fff646bda90
-;	.line	123; "lab1.c"	return randi;
+;;genSkipc:3307: created from rifx:0x7ffcd434e220
+;	.line	125; "lab1.c"	return randi;
 	MOVF	r0x100E,W
 	MOVWF	STK00
 	MOVF	r0x100F,W
-;	.line	127; "lab1.c"	}
+;	.line	129; "lab1.c"	}
 	RETURN	
 ; exit point of _rand
 
@@ -401,19 +394,19 @@ _00212_DS_:
 S_lab1__next	code
 _next:
 ; 2 exit points
-;	.line	107; "lab1.c"	uint8_t s0 = s[0];
+;	.line	109; "lab1.c"	uint8_t s0 = s[0];
 	MOVF	(_s + 0),W
 	MOVWF	r0x1008
-;	.line	108; "lab1.c"	uint8_t s1 = s[1];
+;	.line	110; "lab1.c"	uint8_t s1 = s[1];
 	MOVF	(_s + 1),W
-;	.line	109; "lab1.c"	uint8_t result = s0 + s1;
+;	.line	111; "lab1.c"	uint8_t result = s0 + s1;
 	MOVWF	r0x1009
 	ADDWF	r0x1008,W
 	MOVWF	r0x100A
-;	.line	111; "lab1.c"	s1 ^= s0;
+;	.line	113; "lab1.c"	s1 ^= s0;
 	MOVF	r0x1008,W
 	XORWF	r0x1009,F
-;	.line	112; "lab1.c"	s[0] = rotl(s0, 6) ^ s1 ^ (s1 << 1);
+;	.line	114; "lab1.c"	s[0] = rotl(s0, 6) ^ s1 ^ (s1 << 1);
 	MOVLW	0x06
 	MOVWF	STK01
 	MOVLW	0x00
@@ -435,7 +428,7 @@ _next:
 ;;/home/sdcc-builder/build/sdcc-build/orig/sdcc/src/pic14/gen.c:6828: size=0, offset=0, AOP_TYPE(res)=8
 	MOVF	r0x1008,W
 	MOVWF	(_s + 0)
-;	.line	113; "lab1.c"	s[1] = rotl(s1, 3);
+;	.line	115; "lab1.c"	s[1] = rotl(s1, 3);
 	MOVLW	0x03
 	MOVWF	STK01
 	MOVLW	0x00
@@ -446,9 +439,9 @@ _next:
 	PAGESEL	$
 	MOVWF	r0x1008
 	MOVWF	(_s + 1)
-;	.line	115; "lab1.c"	return result;
+;	.line	117; "lab1.c"	return result;
 	MOVF	r0x100A,W
-;	.line	116; "lab1.c"	}
+;	.line	118; "lab1.c"	}
 	RETURN	
 ; exit point of _next
 
@@ -471,7 +464,7 @@ _rotl:
 ; 2 exit points
 	MOVWF	r0x1007
 	MOVWF	r0x1005
-;	.line	100; "lab1.c"	uint8_t rotl(const uint8_t x, int k) {
+;	.line	102; "lab1.c"	uint8_t rotl(const uint8_t x, int k) {
 	MOVWF	r0x1002
 	MOVF	STK00,W
 ;;1	MOVWF	r0x1003
@@ -481,7 +474,7 @@ _rotl:
 ;;99	MOVF	r0x1002,W
 ;;100	MOVF	r0x1004,W
 ;;101	MOVF	r0x1005,W
-;	.line	101; "lab1.c"	return (x << k) | (x >> (8 - k));
+;	.line	103; "lab1.c"	return (x << k) | (x >> (8 - k));
 	MOVF	r0x1006,W
 	BTFSC	r0x1006,7
 	GOTO	_00180_DS_
@@ -523,7 +516,7 @@ _00182_DS_:
 	MOVWF	r0x1002
 	IORWF	r0x1005,W
 	MOVWF	r0x1007
-;	.line	102; "lab1.c"	}
+;	.line	104; "lab1.c"	}
 	RETURN	
 ; exit point of _rotl
 
@@ -545,11 +538,11 @@ _00182_DS_:
 S_lab1__delay	code
 _delay:
 ; 2 exit points
-;	.line	90; "lab1.c"	void delay(unsigned int tiempo)
+;	.line	92; "lab1.c"	void delay(unsigned int tiempo)
 	MOVWF	r0x1010
 	MOVF	STK00,W
 	MOVWF	r0x1011
-;	.line	95; "lab1.c"	for(i=0;i<tiempo;i++)
+;	.line	97; "lab1.c"	for(i=0;i<tiempo;i++)
 	CLRF	r0x1012
 	CLRF	r0x1013
 _00149_DS_:
@@ -562,8 +555,8 @@ _00149_DS_:
 _00170_DS_:
 	BTFSC	STATUS,0
 	GOTO	_00151_DS_
-;;genSkipc:3307: created from rifx:0x7fff646bda90
-;	.line	96; "lab1.c"	for(j=0;j<1275;j++);
+;;genSkipc:3307: created from rifx:0x7ffcd434e220
+;	.line	98; "lab1.c"	for(j=0;j<1275;j++);
 	MOVLW	0xfb
 	MOVWF	r0x1014
 	MOVLW	0x04
@@ -586,18 +579,18 @@ _00147_DS_:
 	IORWF	r0x1016,W
 	BTFSS	STATUS,2
 	GOTO	_00147_DS_
-;	.line	95; "lab1.c"	for(i=0;i<tiempo;i++)
+;	.line	97; "lab1.c"	for(i=0;i<tiempo;i++)
 	INCF	r0x1012,F
 	BTFSC	STATUS,2
 	INCF	r0x1013,F
 	GOTO	_00149_DS_
 _00151_DS_:
-;	.line	97; "lab1.c"	}
+;	.line	99; "lab1.c"	}
 	RETURN	
 ; exit point of _delay
 
 
 ;	code size estimation:
-;	  235+   36 =   271 instructions (  614 byte)
+;	  231+   36 =   267 instructions (  606 byte)
 
 	end

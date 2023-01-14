@@ -28,7 +28,7 @@ void main(void)
 		if (GP5) {
             // Generar numero random
             random_num = rand();
-            // Elegir cuáles LEDs encender segun el número 
+            // Elegir cuales LEDs encender segun el numero 
             switch (random_num)
             {
                 case 1:
